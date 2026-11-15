@@ -1,0 +1,412 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f2f2f7">
+<title>MyApps</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f2f2f7;
+  --text: #17171a;
+  --muted: #777780;
+  --shadow: 0 8px 24px rgba(0,0,0,.09);
+  --switch-bg: #e4e4e9;
+  --switch-knob: #fff;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #101014;
+  --text: #f5f5f7;
+  --muted: #a1a1aa;
+  --shadow: 0 8px 28px rgba(0,0,0,.28);
+  --switch-bg: #48484d;
+  --switch-knob: #f5f5f7;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+  transition: background .25s ease, color .25s ease;
+  -webkit-font-smoothing: antialiased;
+}
+.page {
+  width: min(100% - 40px, 760px);
+  margin: 0 auto;
+  padding: max(34px, env(safe-area-inset-top)) 0 max(48px, env(safe-area-inset-bottom));
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 48px;
+}
+h1 {
+  margin: 0;
+  font-size: 29px;
+  line-height: 1;
+  font-weight: 720;
+  letter-spacing: -.9px;
+}
+.theme-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 13px;
+  user-select: none;
+}
+.switch {
+  width: 50px;
+  height: 30px;
+  border: 0;
+  border-radius: 99px;
+  padding: 3px;
+  background: var(--switch-bg);
+  cursor: pointer;
+}
+.switch-knob {
+  display: block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--switch-knob);
+  box-shadow: 0 1px 4px rgba(0,0,0,.22);
+  transform: translateX(0);
+  transition: transform .2s ease;
+}
+:root[data-theme="dark"] .switch-knob {
+  transform: translateX(20px);
+}
+.apps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 34px 24px;
+  justify-items: center;
+  max-width: 570px;
+  margin: 0 auto;
+}
+.app {
+  width: 100%;
+  max-width: 132px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+}
+.app-icon {
+  width: min(100%, 112px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 25%;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: transform .18s ease;
+}
+.app:hover .app-icon { transform: translateY(-3px); }
+.app:active .app-icon { transform: scale(.94); }
+.app-name {
+  font-size: 14px;
+  font-weight: 560;
+  text-align: center;
+}
+.app.dragging {
+  position: relative;
+  z-index: 5;
+  opacity: .88;
+  transform: scale(1.06);
+}
+.app.dragging .app-icon {
+  box-shadow: 0 16px 36px rgba(0,0,0,.24);
+}
+.apps.editing .app:not(.dragging) {
+  animation: wiggle .22s ease-in-out infinite alternate;
+}
+.apps.editing .app:nth-child(even):not(.dragging) {
+  animation-delay: .11s;
+}
+@keyframes wiggle {
+  from { transform: rotate(-1.4deg); }
+  to { transform: rotate(1.4deg); }
+}
+.hint {
+  margin: 54px 0 0;
+  color: var(--muted);
+  text-align: center;
+  font-size: 12px;
+  opacity: .8;
+}
+@media (max-width: 480px) {
+  .page {
+    width: min(100% - 36px, 420px);
+    padding-top: max(28px, env(safe-area-inset-top));
+  }
+  header { margin-bottom: 42px; }
+  .apps { gap: 30px 14px; }
+  .app { max-width: 100px; }
+  .app-icon {
+    width: 82px;
+    border-radius: 23%;
+  }
+  .app-name { font-size: 13px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <header>
+    <h1>MyApps</h1>
+    <div class="theme-control">
+      <span id="theme-label">Светлая</span>
+      <button class="switch" id="theme-switch" type="button" role="switch" aria-checked="false" aria-label="Переключить тему">
+        <span class="switch-knob"></span>
+      </button>
+    </div>
+  </header>
+
+  <section class="apps" id="apps" aria-label="Мои приложения">
+
+    <!-- Budget -->
+    <button class="app" type="button" data-id="budget" data-url="https://oopspoops.github.io/budget-app/">
+      <span class="app-icon" style="background:linear-gradient(145deg,#7c5cff,#4930bd)">
+        <svg viewBox="0 0 100 100" width="70%" height="70%" fill="none">
+          <rect x="19" y="25" width="62" height="50" rx="12" fill="#fff" opacity=".18"/>
+          <rect x="23" y="31" width="54" height="39" rx="8" stroke="#fff" stroke-width="5"/>
+          <path d="M23 43h54" stroke="#fff" stroke-width="5"/>
+          <path d="M61 56h10" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+          <path d="M32 21v-5m36 5v-5" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="app-name">Budget</span>
+    </button>
+
+    <!-- RunTimer -->
+    <button class="app" type="button" data-id="timer" data-url="https://oopspoops.github.io/RunTimer/">
+      <span class="app-icon" style="background:linear-gradient(145deg,#ff9f43,#ed5a24)">
+        <svg viewBox="0 0 100 100" width="70%" height="70%" fill="none">
+          <circle cx="50" cy="55" r="29" stroke="#fff" stroke-width="6"/>
+          <path d="M50 55V36m0 19 15 9" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M41 13h18m-9 0v8m23 2 6 6" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="app-name">RunTimer</span>
+    </button>
+
+    <!-- Сёма -->
+    <button class="app" type="button" data-id="sema" data-url="https://oopspoops.github.io/telegram-bot-miniapp/">
+      <span class="app-icon" style="background:linear-gradient(145deg,#35d6a0,#078b78)">
+        <svg viewBox="0 0 100 100" width="70%" height="70%" fill="none">
+          <path d="M50 15c-18 0-32 14-32 31 0 11 6 20 15 26v12l17-8c18 0 32-14 32-31S68 15 50 15Z" fill="#fff" opacity=".2"/>
+          <path d="M50 19c-17 0-29 12-29 28 0 10 5 18 14 23v10l15-7c16 0 29-12 29-26S66 19 50 19Z" stroke="#fff" stroke-width="5" stroke-linejoin="round"/>
+          <path d="M50 34v25m-12-12h24" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="app-name">Сёма</span>
+    </button>
+
+  </section>
+  <p class="hint" id="hint">Удерживай иконку, чтобы изменить порядок</p>
+</main>
+
+<script>
+const root = document.documentElement;
+const themeSwitch = document.getElementById('theme-switch');
+const themeLabel = document.getElementById('theme-label');
+const apps = document.getElementById('apps');
+const hint = document.getElementById('hint');
+
+const ORDER_KEY = 'myapps-order-v1';
+const THEME_KEY = 'myapps-theme-v1';
+
+let editMode = false;
+let pressTimer = null;
+let dragged = null;
+let startX = 0;
+let startY = 0;
+let moved = false;
+
+function setTheme(theme) {
+  root.dataset.theme = theme;
+  const dark = theme === 'dark';
+  themeSwitch.setAttribute('aria-checked', String(dark));
+  themeLabel.textContent = dark ? 'Тёмная' : 'Светлая';
+  document.querySelector('meta[name="theme-color"]').content =
+    dark ? '#101014' : '#f2f2f7';
+  localStorage.setItem(THEME_KEY, theme);
+}
+
+setTheme(localStorage.getItem(THEME_KEY) || 'light');
+
+themeSwitch.addEventListener('click', () => {
+  setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark');
+});
+
+function saveOrder() {
+  localStorage.setItem(
+    ORDER_KEY,
+    JSON.stringify([...apps.children].map(el => el.dataset.id))
+  );
+}
+
+function restoreOrder() {
+  try {
+    const order = JSON.parse(localStorage.getItem(ORDER_KEY) || '[]');
+    if (!Array.isArray(order)) return;
+
+    order.forEach(id => {
+      const item = [...apps.children].find(el => el.dataset.id === id);
+      if (item) apps.appendChild(item);
+    });
+  } catch (_) {}
+}
+
+restoreOrder();
+
+function setEditMode(value) {
+  editMode = value;
+  apps.classList.toggle('editing', value);
+  hint.textContent = value
+    ? 'Перетащи иконку · нажми вне иконок, чтобы выйти'
+    : 'Удерживай иконку, чтобы изменить порядок';
+}
+
+function stopPress() {
+  clearTimeout(pressTimer);
+  pressTimer = null;
+}
+
+function beginDrag(item, event) {
+  dragged = item;
+  moved = false;
+  item.classList.add('dragging');
+  setEditMode(true);
+  if (navigator.vibrate) navigator.vibrate(25);
+}
+
+function moveItem(x, y) {
+  if (!dragged) return;
+
+  const others = [...apps.querySelectorAll('.app:not(.dragging)')];
+  let target = null;
+  let best = Infinity;
+
+  for (const item of others) {
+    const r = item.getBoundingClientRect();
+    const cx = r.left + r.width / 2;
+    const cy = r.top + r.height / 2;
+    const d = Math.hypot(x - cx, y - cy);
+
+    if (d < best) {
+      best = d;
+      target = item;
+    }
+  }
+
+  if (!target) return;
+
+  const r = target.getBoundingClientRect();
+  const before = y < r.top + r.height / 2 ||
+    (Math.abs(y - (r.top + r.height / 2)) < r.height / 2 &&
+    x < r.left + r.width / 2);
+
+  if (before) apps.insertBefore(dragged, target);
+  else apps.insertBefore(dragged, target.nextSibling);
+}
+
+function finishDrag() {
+  if (!dragged) return;
+  dragged.classList.remove('dragging');
+  dragged = null;
+  saveOrder();
+}
+
+apps.querySelectorAll('.app').forEach(item => {
+  item.addEventListener('pointerdown', event => {
+    if (event.button !== 0) return;
+
+    startX = event.clientX;
+    startY = event.clientY;
+    moved = false;
+    stopPress();
+
+    pressTimer = setTimeout(() => {
+      beginDrag(item, event);
+    }, 500);
+  });
+
+  item.addEventListener('pointermove', event => {
+    if (!dragged && pressTimer) {
+      if (Math.hypot(
+        event.clientX - startX,
+        event.clientY - startY
+      ) > 12) stopPress();
+    }
+
+    if (dragged === item) {
+      moved = true;
+      moveItem(event.clientX, event.clientY);
+    }
+  });
+
+  item.addEventListener('pointerup', () => {
+    stopPress();
+    if (dragged === item) finishDrag();
+  });
+
+  item.addEventListener('pointercancel', () => {
+    stopPress();
+    if (dragged === item) finishDrag();
+  });
+
+  item.addEventListener('contextmenu', event => event.preventDefault());
+
+  item.addEventListener('click', event => {
+    if (editMode || moved) {
+      event.preventDefault();
+      return;
+    }
+
+    window.open(item.dataset.url, '_blank', 'noopener,noreferrer');
+  });
+});
+
+document.addEventListener('pointerup', () => {
+  stopPress();
+  if (dragged) finishDrag();
+});
+
+document.addEventListener('click', event => {
+  if (editMode && !event.target.closest('.app')) {
+    setEditMode(false);
+  }
+});
+
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && editMode) {
+    setEditMode(false);
+  }
+});
+</script>
+</body>
+</html>
