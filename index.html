@@ -1,193 +1,329 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#f2f2f7">
+<meta name="theme-color" content="#dfe7f7">
 <title>MyApps</title>
 <style>
-:root {
-  color-scheme: light;
-  --bg: #f2f2f7;
-  --text: #17171a;
-  --muted: #777780;
-  --shadow: 0 8px 24px rgba(0,0,0,.09);
-  --switch-bg: #e4e4e9;
-  --switch-knob: #fff;
-}
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --bg: #101014;
-  --text: #f5f5f7;
-  --muted: #a1a1aa;
-  --shadow: 0 8px 28px rgba(0,0,0,.28);
-  --switch-bg: #48484d;
-  --switch-knob: #f5f5f7;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: var(--bg);
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
-  transition: background .25s ease, color .25s ease;
-  -webkit-font-smoothing: antialiased;
-}
-.page {
-  width: min(100% - 40px, 760px);
-  margin: 0 auto;
-  padding: max(34px, env(safe-area-inset-top)) 0 max(48px, env(safe-area-inset-bottom));
-}
-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 48px;
-}
-h1 {
-  margin: 0;
-  font-size: 29px;
-  line-height: 1;
-  font-weight: 720;
-  letter-spacing: -.9px;
-}
-.theme-control {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--muted);
-  font-size: 13px;
-  user-select: none;
-}
-.switch {
-  width: 50px;
-  height: 30px;
-  border: 0;
-  border-radius: 99px;
-  padding: 3px;
-  background: var(--switch-bg);
-  cursor: pointer;
-}
-.switch-knob {
-  display: block;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--switch-knob);
-  box-shadow: 0 1px 4px rgba(0,0,0,.22);
-  transform: translateX(0);
-  transition: transform .2s ease;
-}
-:root[data-theme="dark"] .switch-knob {
-  transform: translateX(20px);
-}
-.apps {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 34px 24px;
-  justify-items: center;
-  max-width: 570px;
-  margin: 0 auto;
-}
-.app {
-  width: 100%;
-  max-width: 132px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--text);
-  font: inherit;
-  cursor: pointer;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: none;
-}
-.app-icon {
-  width: min(100%, 112px);
-  aspect-ratio: 1;
-  display: grid;
-  place-items: center;
-  border-radius: 25%;
-  box-shadow: var(--shadow);
-  overflow: hidden;
-  transition: transform .18s ease;
-}
-.app:hover .app-icon { transform: translateY(-3px); }
-.app:active .app-icon { transform: scale(.94); }
-.app-name {
-  font-size: 14px;
-  font-weight: 560;
-  text-align: center;
-}
-.app.dragging {
-  position: relative;
-  z-index: 5;
-  opacity: .88;
-  transform: scale(1.06);
-}
-.app.dragging .app-icon {
-  box-shadow: 0 16px 36px rgba(0,0,0,.24);
-}
-.apps.editing .app:not(.dragging) {
-  animation: wiggle .22s ease-in-out infinite alternate;
-}
-.apps.editing .app:nth-child(even):not(.dragging) {
-  animation-delay: .11s;
-}
-@keyframes wiggle {
-  from { transform: rotate(-1.4deg); }
-  to { transform: rotate(1.4deg); }
-}
-.hint {
-  margin: 54px 0 0;
-  color: var(--muted);
-  text-align: center;
-  font-size: 12px;
-  opacity: .8;
-}
-@media (max-width: 480px) {
+  :root {
+    color-scheme: light;
+    --text: #17171a;
+    --muted: #5b5b66;
+    --wall-1: #b9cdff;
+    --wall-2: #e2c6ff;
+    --wall-3: #ffd6bd;
+    --glass: rgba(255,255,255,.5);
+    --glass-border: rgba(255,255,255,.72);
+    --glass-shadow: 0 10px 30px rgba(30,30,60,.14);
+    --switch-bg: rgba(120,120,128,.3);
+    --switch-knob: #ffffff;
+    --icon-shadow: 0 10px 22px rgba(20,20,50,.2), 0 2px 5px rgba(0,0,0,.1);
+    --label-shadow: 0 1px 3px rgba(0,0,0,.35);
+    --accent: #0a84ff;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --text: #f5f5f7;
+    --muted: #b0b0bb;
+    --wall-1: #0a1024;
+    --wall-2: #1a1240;
+    --wall-3: #2b0f38;
+    --glass: rgba(28,28,34,.55);
+    --glass-border: rgba(255,255,255,.1);
+    --glass-shadow: 0 10px 30px rgba(0,0,0,.55);
+    --switch-bg: rgba(120,120,128,.45);
+    --switch-knob: #f5f5f7;
+    --icon-shadow: 0 10px 24px rgba(0,0,0,.5), 0 2px 6px rgba(0,0,0,.3);
+    --label-shadow: 0 1px 4px rgba(0,0,0,.7);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background: transparent;
+    overflow-x: hidden;
+  }
+
+  /* ---------- обои ---------- */
+  .wallpaper {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background: linear-gradient(160deg, var(--wall-1), var(--wall-2) 48%, var(--wall-3));
+    transition: background .4s ease;
+  }
+  .wallpaper::after {
+    content: "";
+    position: absolute;
+    inset: -10%;
+    background:
+      radial-gradient(38% 28% at 22% 16%, rgba(255,255,255,.55), transparent 70%),
+      radial-gradient(32% 26% at 82% 10%, rgba(255,255,255,.35), transparent 70%),
+      radial-gradient(50% 40% at 55% 108%, rgba(0,0,0,.16), transparent 70%);
+  }
+  :root[data-theme="dark"] .wallpaper::after {
+    background:
+      radial-gradient(38% 28% at 22% 16%, rgba(120,150,255,.18), transparent 70%),
+      radial-gradient(32% 26% at 82% 10%, rgba(200,120,255,.15), transparent 70%),
+      radial-gradient(50% 40% at 55% 108%, rgba(0,0,0,.5), transparent 70%);
+  }
+
   .page {
-    width: min(100% - 36px, 420px);
-    padding-top: max(28px, env(safe-area-inset-top));
+    position: relative;
+    width: min(100% - 40px, 760px);
+    margin: 0 auto;
+    padding: max(28px, env(safe-area-inset-top)) 0 max(40px, env(safe-area-inset-bottom));
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
   }
-  header { margin-bottom: 42px; }
-  .apps { gap: 30px 14px; }
-  .app { max-width: 100px; }
+
+  /* ---------- шапка ---------- */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 44px;
+  }
+  h1 {
+    margin: 0;
+    font-size: 30px;
+    line-height: 1;
+    font-weight: 730;
+    letter-spacing: -.9px;
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 6px 5px 12px;
+    border-radius: 999px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    -webkit-backdrop-filter: blur(22px) saturate(180%);
+    backdrop-filter: blur(22px) saturate(180%);
+    box-shadow: var(--glass-shadow);
+  }
+  .theme-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    user-select: none;
+    min-width: 44px;
+  }
+  .switch {
+    width: 46px;
+    height: 28px;
+    padding: 3px;
+    border: 0;
+    border-radius: 99px;
+    background: var(--switch-bg);
+    cursor: pointer;
+    transition: background .25s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .switch-knob {
+    display: block;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--switch-knob);
+    box-shadow: 0 2px 6px rgba(0,0,0,.22), 0 0 1px rgba(0,0,0,.1);
+    transition: transform .28s cubic-bezier(.34,1.56,.64,1);
+  }
+  :root[data-theme="dark"] .switch-knob { transform: translateX(18px); }
+
+  .icon-btn {
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    transition: background .18s ease, transform .18s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .icon-btn:hover { background: rgba(120,120,128,.16); }
+  .icon-btn:active { transform: scale(.88); }
+  .icon-btn svg { width: 17px; height: 17px; }
+
+  .done-btn {
+    display: none;
+    padding: 6px 14px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 12.5px;
+    font-weight: 650;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform .15s ease, filter .15s ease;
+  }
+  .done-btn:active { transform: scale(.94); filter: brightness(.92); }
+  body.editing .done-btn { display: block; }
+  body.editing .theme-label { display: none; }
+
+  /* ---------- сетка иконок ---------- */
+  .apps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px 20px;
+    justify-items: center;
+    align-items: start;
+    max-width: 560px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .app {
+    position: relative;
+    width: 100%;
+    max-width: 118px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    touch-action: none;
+    z-index: 1;
+  }
+
   .app-icon {
-    width: 82px;
-    border-radius: 23%;
+    position: relative;
+    width: min(100%, 108px);
+    aspect-ratio: 1 / 1;
+    display: grid;
+    place-items: center;
+    border-radius: 24%;       /* squircle-подобное скругление */
+    overflow: hidden;
+    box-shadow: var(--icon-shadow);
+    transition: transform .22s cubic-bezier(.34,1.56,.64,1),
+                box-shadow .22s ease,
+                opacity .18s ease;
   }
-  .app-name { font-size: 13px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: .01ms !important;
-    transition-duration: .01ms !important;
+  /* глянцевый блик сверху — как у иконок iOS */
+  .app-icon::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(180deg, rgba(255,255,255,.3), rgba(255,255,255,0) 48%);
+    pointer-events: none;
   }
-}
+
+  .app-name {
+    font-size: 13.5px;
+    font-weight: 560;
+    letter-spacing: -.1px;
+    text-align: center;
+    line-height: 1.15;
+    text-shadow: var(--label-shadow);
+  }
+
+  .app:hover .app-icon { transform: translateY(-2px) scale(1.02); }
+  .app:active .app-icon { transform: scale(.93); }
+
+  .app.opening .app-icon {
+    transform: scale(.84);
+    opacity: .55;
+  }
+
+  .app.dragging { z-index: 100; cursor: grabbing; }
+  .app.dragging .app-icon {
+    transform: scale(1.14);
+    box-shadow: 0 26px 52px rgba(0,0,0,.38), 0 4px 12px rgba(0,0,0,.2);
+  }
+
+  /* ---------- iOS-«дрожание» ----------
+     Используем независимое свойство `rotate`,
+     чтобы оно не конфликтовало с FLIP-`transform`. */
+  @keyframes jiggle {
+    from { rotate: -1.4deg; }
+    to   { rotate:  1.4deg; }
+  }
+  .apps.editing .app:not(.dragging) {
+    animation: jiggle .28s ease-in-out infinite alternate;
+  }
+  .apps.editing .app:nth-child(2n):not(.dragging) {
+    animation-delay: .14s;
+  }
+
+  .hint {
+    margin: 46px 0 0;
+    color: var(--muted);
+    text-align: center;
+    font-size: 12px;
+    opacity: .85;
+  }
+
+  @media (max-width: 480px) {
+    .page {
+      width: min(100% - 34px, 420px);
+      padding-top: max(24px, env(safe-area-inset-top));
+    }
+    header { margin-bottom: 38px; }
+    h1 { font-size: 26px; }
+    .apps { gap: 28px 14px; }
+    .app { max-width: 96px; }
+    .app-icon { width: 82px; border-radius: 23%; }
+    .app-name { font-size: 12.5px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .01ms !important;
+    }
+  }
 </style>
 </head>
 <body>
+<div class="wallpaper" aria-hidden="true"></div>
+
 <main class="page">
   <header>
     <h1>MyApps</h1>
-    <div class="theme-control">
-      <span id="theme-label">Светлая</span>
+    <div class="controls">
+      <span class="theme-label" id="theme-label">Светлая</span>
       <button class="switch" id="theme-switch" type="button" role="switch" aria-checked="false" aria-label="Переключить тему">
         <span class="switch-knob"></span>
       </button>
+      <button class="icon-btn" id="refresh-btn" type="button" aria-label="Обновить страницу" title="Обновить страницу">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 11a8.1 8.1 0 0 0-14.9-4L3 10"/>
+          <path d="M3 4v6h6"/>
+          <path d="M4 13a8.1 8.1 0 0 0 14.9 4L21 14"/>
+          <path d="M21 20v-6h-6"/>
+        </svg>
+      </button>
+      <button class="done-btn" id="done-btn" type="button">Готово</button>
     </div>
   </header>
 
   <section class="apps" id="apps" aria-label="Мои приложения">
 
-    <!-- Budget -->
     <button class="app" type="button" data-id="budget" data-url="https://oopspoops.github.io/budget-app/">
       <span class="app-icon" style="background:linear-gradient(145deg,#7c5cff,#4930bd)">
         <svg viewBox="0 0 100 100" width="70%" height="70%" fill="none">
@@ -201,7 +337,6 @@ h1 {
       <span class="app-name">Budget</span>
     </button>
 
-    <!-- RunTimer -->
     <button class="app" type="button" data-id="timer" data-url="https://oopspoops.github.io/RunTimer/">
       <span class="app-icon" style="background:linear-gradient(145deg,#ff9f43,#ed5a24)">
         <svg viewBox="0 0 100 100" width="70%" height="70%" fill="none">
@@ -213,7 +348,6 @@ h1 {
       <span class="app-name">RunTimer</span>
     </button>
 
-    <!-- Сёма -->
     <button class="app" type="button" data-id="sema" data-url="https://oopspoops.github.io/telegram-bot-miniapp/">
       <span class="app-icon" style="background:linear-gradient(145deg,#35d6a0,#078b78)">
         <svg viewBox="0 0 100 100" width="70%" height="70%" fill="none">
@@ -226,187 +360,285 @@ h1 {
     </button>
 
   </section>
+
   <p class="hint" id="hint">Удерживай иконку, чтобы изменить порядок</p>
 </main>
 
 <script>
-const root = document.documentElement;
-const themeSwitch = document.getElementById('theme-switch');
-const themeLabel = document.getElementById('theme-label');
-const apps = document.getElementById('apps');
-const hint = document.getElementById('hint');
+(() => {
+  const root       = document.documentElement;
+  const themeBtn   = document.getElementById('theme-switch');
+  const themeLabel = document.getElementById('theme-label');
+  const refreshBtn = document.getElementById('refresh-btn');
+  const doneBtn    = document.getElementById('done-btn');
+  const apps       = document.getElementById('apps');
+  const hint       = document.getElementById('hint');
 
-const ORDER_KEY = 'myapps-order-v1';
-const THEME_KEY = 'myapps-theme-v1';
+  const ORDER_KEY = 'myapps-order-v1';
+  const THEME_KEY = 'myapps-theme-v1';
 
-let editMode = false;
-let pressTimer = null;
-let dragged = null;
-let startX = 0;
-let startY = 0;
-let moved = false;
+  let editMode      = false;
+  let pressTimer    = null;
+  let drag          = null;      // { el, grabX, grabY, layoutRect, tx, ty }
+  let pointerInfo   = null;
+  let suppressClick = false;
 
-function setTheme(theme) {
-  root.dataset.theme = theme;
-  const dark = theme === 'dark';
-  themeSwitch.setAttribute('aria-checked', String(dark));
-  themeLabel.textContent = dark ? 'Тёмная' : 'Светлая';
-  document.querySelector('meta[name="theme-color"]').content =
-    dark ? '#101014' : '#f2f2f7';
-  localStorage.setItem(THEME_KEY, theme);
-}
+  /* ---------- тема ---------- */
+  function setTheme(theme) {
+    root.dataset.theme = theme;
+    const dark = theme === 'dark';
+    themeBtn.setAttribute('aria-checked', String(dark));
+    themeLabel.textContent = dark ? 'Тёмная' : 'Светлая';
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.content = dark ? '#0a1024' : '#dfe7f7';
+    try { localStorage.setItem(THEME_KEY, theme); } catch (_) {}
+  }
 
-setTheme(localStorage.getItem(THEME_KEY) || 'light');
+  let savedTheme = 'light';
+  try { savedTheme = localStorage.getItem(THEME_KEY) || 'light'; } catch (_) {}
+  setTheme(savedTheme);
 
-themeSwitch.addEventListener('click', () => {
-  setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark');
-});
+  themeBtn.addEventListener('click', () => {
+    setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark');
+  });
 
-function saveOrder() {
-  localStorage.setItem(
-    ORDER_KEY,
-    JSON.stringify([...apps.children].map(el => el.dataset.id))
-  );
-}
+  refreshBtn.addEventListener('click', () => window.location.reload());
 
-function restoreOrder() {
-  try {
-    const order = JSON.parse(localStorage.getItem(ORDER_KEY) || '[]');
-    if (!Array.isArray(order)) return;
+  /* ---------- порядок ---------- */
+  function saveOrder() {
+    try {
+      localStorage.setItem(
+        ORDER_KEY,
+        JSON.stringify([...apps.children].map(el => el.dataset.id))
+      );
+    } catch (_) {}
+  }
 
-    order.forEach(id => {
-      const item = [...apps.children].find(el => el.dataset.id === id);
-      if (item) apps.appendChild(item);
-    });
-  } catch (_) {}
-}
+  function restoreOrder() {
+    try {
+      const order = JSON.parse(localStorage.getItem(ORDER_KEY) || '[]');
+      if (!Array.isArray(order)) return;
+      order.forEach(id => {
+        const item = [...apps.children].find(el => el.dataset.id === id);
+        if (item) apps.appendChild(item);
+      });
+    } catch (_) {}
+  }
+  restoreOrder();
 
-restoreOrder();
+  /* ---------- режим редактирования ---------- */
+  function setEditMode(value) {
+    if (editMode === value) return;
+    editMode = value;
+    apps.classList.toggle('editing', value);
+    document.body.classList.toggle('editing', value);
+    hint.textContent = value
+      ? 'Перетаскивай иконки · нажми «Готово», чтобы выйти'
+      : 'Удерживай иконку, чтобы изменить порядок';
+  }
+  doneBtn.addEventListener('click', () => setEditMode(false));
 
-function setEditMode(value) {
-  editMode = value;
-  apps.classList.toggle('editing', value);
-  hint.textContent = value
-    ? 'Перетащи иконку · нажми вне иконок, чтобы выйти'
-    : 'Удерживай иконку, чтобы изменить порядок';
-}
+  /* ---------- утилиты ---------- */
+  // Возвращает «layout»-прямоугольник без учёта inline-transform
+  function layoutRect(el) {
+    const prev = el.style.transform;
+    el.style.transform = 'none';
+    const r = el.getBoundingClientRect();
+    el.style.transform = prev;
+    return r;
+  }
 
-function stopPress() {
-  clearTimeout(pressTimer);
-  pressTimer = null;
-}
+  /* ---------- drag ---------- */
+  function beginDrag(el, x, y) {
+    const r = el.getBoundingClientRect();
+    drag = {
+      el,
+      grabX: x - r.left,
+      grabY: y - r.top,
+      layoutRect: r,
+      tx: 0,
+      ty: 0,
+    };
+    el.classList.add('dragging');
+    el.style.transition = 'none';
+    el.style.transform  = 'translate(0px, 0px)';
+    setEditMode(true);
+    suppressClick = true;
+    if (navigator.vibrate) { try { navigator.vibrate(15); } catch (_) {} }
+  }
 
-function beginDrag(item, event) {
-  dragged = item;
-  moved = false;
-  item.classList.add('dragging');
-  setEditMode(true);
-  if (navigator.vibrate) navigator.vibrate(25);
-}
+  function updateDrag(x, y) {
+    if (!drag) return;
+    drag.tx = x - drag.grabX - drag.layoutRect.left;
+    drag.ty = y - drag.grabY - drag.layoutRect.top;
+    drag.el.style.transform = `translate(${drag.tx}px, ${drag.ty}px)`;
+    maybeReorder(x, y);
+  }
 
-function moveItem(x, y) {
-  if (!dragged) return;
+  function maybeReorder(x, y) {
+    if (!drag) return;
 
-  const others = [...apps.querySelectorAll('.app:not(.dragging)')];
-  let target = null;
-  let best = Infinity;
+    const siblings = [...apps.children].filter(c => c !== drag.el);
+    if (!siblings.length) return;
 
-  for (const item of others) {
-    const r = item.getBoundingClientRect();
-    const cx = r.left + r.width / 2;
-    const cy = r.top + r.height / 2;
-    const d = Math.hypot(x - cx, y - cy);
+    // ближайший сосед к пальцу
+    let best = null, bestD = Infinity;
+    for (const el of siblings) {
+      const r  = el.getBoundingClientRect();
+      const cx = r.left + r.width / 2;
+      const cy = r.top  + r.height / 2;
+      const d  = (x - cx) ** 2 + (y - cy) ** 2;
+      if (d < bestD) { bestD = d; best = { el, r, cx, cy }; }
+    }
+    if (!best) return;
 
-    if (d < best) {
-      best = d;
-      target = item;
+    const before =
+      (y < best.cy - best.r.height * 0.3) ||
+      (Math.abs(y - best.cy) <= best.r.height * 0.3 && x < best.cx);
+
+    const prevNext = drag.el.nextSibling;
+
+    // запоминаем позиции соседей для FLIP
+    const fromPositions = new Map();
+    for (const el of siblings) fromPositions.set(el, el.getBoundingClientRect());
+
+    if (before) apps.insertBefore(drag.el, best.el);
+    else        apps.insertBefore(drag.el, best.el.nextSibling);
+
+    // позиция не изменилась — выходим
+    if (drag.el.nextSibling === prevNext) return;
+
+    // 1. «схваченный» элемент остаётся визуально на месте
+    const visualLeft = drag.layoutRect.left + drag.tx;
+    const visualTop  = drag.layoutRect.top  + drag.ty;
+    drag.layoutRect  = layoutRect(drag.el);
+    drag.tx = visualLeft - drag.layoutRect.left;
+    drag.ty = visualTop  - drag.layoutRect.top;
+    drag.el.style.transform = `translate(${drag.tx}px, ${drag.ty}px)`;
+
+    // 2. остальные плавно разъезжаются (FLIP)
+    for (const el of siblings) {
+      const from = fromPositions.get(el);
+      const to   = el.getBoundingClientRect();
+      const dx = from.left - to.left;
+      const dy = from.top  - to.top;
+      if (!dx && !dy) continue;
+
+      el.style.transition = 'none';
+      el.style.transform  = `translate(${dx}px, ${dy}px)`;
+      void el.offsetWidth;
+      el.style.transition = 'transform .28s cubic-bezier(.22,1,.36,1)';
+      el.style.transform  = '';
     }
   }
 
-  if (!target) return;
+  function endDrag() {
+    if (!drag) return;
+    const el = drag.el;
+    el.style.transition = 'transform .32s cubic-bezier(.22,1,.36,1)';
+    el.style.transform  = 'translate(0px, 0px)';
+    el.classList.remove('dragging');
+    setTimeout(() => {
+      el.style.transition = '';
+      el.style.transform  = '';
+    }, 340);
+    drag = null;
+    saveOrder();
+  }
 
-  const r = target.getBoundingClientRect();
-  const before = y < r.top + r.height / 2 ||
-    (Math.abs(y - (r.top + r.height / 2)) < r.height / 2 &&
-    x < r.left + r.width / 2);
+  /* ---------- pointer-события ----------
+     Слушаем pointermove/pointerup на `document`,
+     чтобы перетаскивание не ломалось при выходе за пределы иконки. */
+  function onPointerDown(event) {
+    const item = event.target.closest('.app');
+    if (!item) return;
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
 
-  if (before) apps.insertBefore(dragged, target);
-  else apps.insertBefore(dragged, target.nextSibling);
-}
+    suppressClick = false;
+    pointerInfo = {
+      item,
+      sx: event.clientX,
+      sy: event.clientY,
+      x:  event.clientX,
+      y:  event.clientY,
+    };
 
-function finishDrag() {
-  if (!dragged) return;
-  dragged.classList.remove('dragging');
-  dragged = null;
-  saveOrder();
-}
-
-apps.querySelectorAll('.app').forEach(item => {
-  item.addEventListener('pointerdown', event => {
-    if (event.button !== 0) return;
-
-    startX = event.clientX;
-    startY = event.clientY;
-    moved = false;
-    stopPress();
-
+    clearTimeout(pressTimer);
     pressTimer = setTimeout(() => {
-      beginDrag(item, event);
-    }, 500);
-  });
+      if (!pointerInfo) return;
+      beginDrag(pointerInfo.item, pointerInfo.x, pointerInfo.y);
+      pressTimer = null;
+    }, 450);
+  }
 
-  item.addEventListener('pointermove', event => {
-    if (!dragged && pressTimer) {
-      if (Math.hypot(
-        event.clientX - startX,
-        event.clientY - startY
-      ) > 12) stopPress();
+  function onPointerMove(event) {
+    if (drag) {
+      updateDrag(event.clientX, event.clientY);
+      return;
     }
+    if (!pointerInfo || !pressTimer) return;
 
-    if (dragged === item) {
-      moved = true;
-      moveItem(event.clientX, event.clientY);
+    pointerInfo.x = event.clientX;
+    pointerInfo.y = event.clientY;
+
+    if (Math.hypot(event.clientX - pointerInfo.sx,
+                   event.clientY - pointerInfo.sy) > 12) {
+      clearTimeout(pressTimer);
+      pressTimer = null;
     }
-  });
+  }
 
-  item.addEventListener('pointerup', () => {
-    stopPress();
-    if (dragged === item) finishDrag();
-  });
+  function onPointerUp() {
+    clearTimeout(pressTimer);
+    pressTimer = null;
+    pointerInfo = null;
+    if (drag) {
+      endDrag();
+      suppressClick = true;
+    }
+  }
 
-  item.addEventListener('pointercancel', () => {
-    stopPress();
-    if (dragged === item) finishDrag();
-  });
+  apps.addEventListener('pointerdown', onPointerDown);
+  document.addEventListener('pointermove', onPointerMove, { passive: true });
+  document.addEventListener('pointerup', onPointerUp);
+  document.addEventListener('pointercancel', onPointerUp);
 
-  item.addEventListener('contextmenu', event => event.preventDefault());
+  /* ---------- клики ---------- */
+  apps.addEventListener('click', event => {
+    const item = event.target.closest('.app');
+    if (!item) return;
 
-  item.addEventListener('click', event => {
-    if (editMode || moved) {
+    if (suppressClick) {
+      suppressClick = false;
       event.preventDefault();
       return;
     }
+    if (editMode) {
+      event.preventDefault();
+      return;
+    }
+    const url = item.dataset.url;
+    if (!url) return;
 
-    window.open(item.dataset.url, '_blank', 'noopener,noreferrer');
+    item.classList.add('opening');
+    setTimeout(() => item.classList.remove('opening'), 220);
+    window.open(url, '_blank', 'noopener,noreferrer');
   });
-});
 
-document.addEventListener('pointerup', () => {
-  stopPress();
-  if (dragged) finishDrag();
-});
+  apps.addEventListener('contextmenu', e => e.preventDefault());
 
-document.addEventListener('click', event => {
-  if (editMode && !event.target.closest('.app')) {
-    setEditMode(false);
-  }
-});
+  document.addEventListener('click', event => {
+    if (editMode &&
+        !event.target.closest('.app') &&
+        !event.target.closest('.done-btn')) {
+      setEditMode(false);
+    }
+  });
 
-document.addEventListener('keydown', event => {
-  if (event.key === 'Escape' && editMode) {
-    setEditMode(false);
-  }
-});
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && editMode) setEditMode(false);
+  });
+})();
 </script>
 </body>
 </html>
