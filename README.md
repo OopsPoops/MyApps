@@ -1,3 +1,1 @@
-# MyApps
-
-https://oopspoops.github.io/myapps/
+# [MyApps](https://oopspoops.github.io/MyApps/)
