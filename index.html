@@ -47,8 +47,7 @@
   * { box-sizing: border-box; }
   html {
     min-height: 100%;
-    background-color: var(--wall-3);
-    background-image: linear-gradient(160deg, var(--wall-1), var(--wall-2) 48%, var(--wall-3));
+    background: var(--wall-3);
   }
   body {
     margin: 0;
@@ -57,7 +56,8 @@
     color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
     -webkit-font-smoothing: antialiased;
-    background: transparent;
+    background: linear-gradient(160deg, var(--wall-1), var(--wall-2) 48%, var(--wall-3)) fixed;
+    background-size: 100% 100%;
     overflow-x: hidden;
   }
 
@@ -66,6 +66,7 @@
     width: min(100% - 40px, 760px);
     margin: 0 auto;
     padding: max(28px, env(safe-area-inset-top)) 0 max(40px, env(safe-area-inset-bottom));
+    min-height: 100vh;
     min-height: 100dvh;
     display: flex;
     flex-direction: column;
