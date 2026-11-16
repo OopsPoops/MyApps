@@ -230,6 +230,7 @@
     object-fit: cover;
   }
   .app-image.sema-image { object-position: center 38%; }
+  .app-image.exchange-image { object-position: center 40%; }
   /* глянцевый блик сверху — как у иконок iOS */
   .app-icon::after {
     content: "";
@@ -347,12 +348,8 @@
     </button>
 
     <button class="app" type="button" data-id="exchange" data-url="https://oopspoops.github.io/exchange/">
-      <span class="app-icon" style="background:linear-gradient(145deg,#42d6b0,#16856f)">
-        <svg viewBox="0 0 100 100" width="70%" height="70%" fill="none">
-          <circle cx="50" cy="50" r="34" stroke="#fff" stroke-width="5" opacity=".35"/>
-          <path d="M29 40h39l-9-9m12 29H32l9 9" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M51 34v32m8-24c-2-3-5-4-9-4-5 0-8 2-8 6 0 10 18 4 18 14 0 4-4 7-10 7-4 0-8-2-10-5" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+      <span class="app-icon">
+        <img class="app-image exchange-image" src="assets/icons/money.jpeg" alt="" aria-hidden="true">
       </span>
       <span class="app-name">Exchange</span>
     </button>
