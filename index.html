@@ -276,6 +276,13 @@
     font-size: 12px;
     opacity: .85;
   }
+  .games-title {
+    margin: 42px 0 24px;
+    font-size: 21px;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: -.4px;
+  }
 
   @media (max-width: 480px) {
     .page {
@@ -348,6 +355,21 @@
       <span class="app-name">RunTimer</span>
     </button>
 
+    <button class="app" type="button" data-id="sema" data-url="https://t.me/sema_schitayet_bot/?startapp">
+      <span class="app-icon" style="background:linear-gradient(145deg,#35d6a0,#078b78)">
+        <svg viewBox="0 0 100 100" width="70%" height="70%" fill="none">
+          <path d="M50 15c-18 0-32 14-32 31 0 11 6 20 15 26v12l17-8c18 0 32-14 32-31S68 15 50 15Z" fill="#fff" opacity=".2"/>
+          <path d="M50 19c-17 0-29 12-29 28 0 10 5 18 14 23v10l15-7c16 0 29-12 29-26S66 19 50 19Z" stroke="#fff" stroke-width="5" stroke-linejoin="round"/>
+          <path d="M50 34v25m-12-12h24" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="app-name">Сёма</span>
+    </button>
+
+  </section>
+
+  <h2 class="games-title">Игры</h2>
+  <section class="apps" id="games" aria-label="Игры">
     <button class="app" type="button" data-id="game-2048" data-url="https://oopspoops.github.io/RunTimer/game_2048.html">
       <span class="app-icon" style="background:linear-gradient(145deg,#f6a94b,#dc6b32)">
         <svg viewBox="0 0 100 100" width="70%" height="70%" fill="none">
@@ -388,10 +410,9 @@
     <button class="app" type="button" data-id="game-runner" data-url="https://oopspoops.github.io/RunTimer/game_runner.html">
       <span class="app-icon" style="background:linear-gradient(145deg,#47d39b,#138d71)">
         <svg viewBox="0 0 100 100" width="70%" height="70%" fill="none">
-          <path d="M17 76h66" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".7"/>
-          <circle cx="52" cy="25" r="8" fill="#fff"/>
-          <path d="m49 37-13 18 17 7 13-13m-30 6-14 3m31 11-11 13m-6-21 1 20m19-32 13 12" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M23 67h9v9h-9zm43-4h10v13H66z" fill="#fff" opacity=".55"/>
+          <path d="M23 50c2-9 10-17 19-17h11c6 0 10 3 14 8l8 9 10 3c5 1 8 5 8 10v6H28c-7 0-12-5-12-12 0-3 3-6 7-7Z" fill="#fff" opacity=".9"/>
+          <path d="M29 70h56M49 49h10m-5-9v18m18-9h8" stroke="#138d71" stroke-width="5" stroke-linecap="round"/>
+          <path d="M34 79h42" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".65"/>
         </svg>
       </span>
       <span class="app-name">Раннер</span>
@@ -409,18 +430,6 @@
       </span>
       <span class="app-name">Три в ряд</span>
     </button>
-
-    <button class="app" type="button" data-id="sema" data-url="https://t.me/sema_schitayet_bot/?startapp">
-      <span class="app-icon" style="background:linear-gradient(145deg,#35d6a0,#078b78)">
-        <svg viewBox="0 0 100 100" width="70%" height="70%" fill="none">
-          <path d="M50 15c-18 0-32 14-32 31 0 11 6 20 15 26v12l17-8c18 0 32-14 32-31S68 15 50 15Z" fill="#fff" opacity=".2"/>
-          <path d="M50 19c-17 0-29 12-29 28 0 10 5 18 14 23v10l15-7c16 0 29-12 29-26S66 19 50 19Z" stroke="#fff" stroke-width="5" stroke-linejoin="round"/>
-          <path d="M50 34v25m-12-12h24" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
-        </svg>
-      </span>
-      <span class="app-name">Сёма</span>
-    </button>
-
   </section>
 
   <p class="hint" id="hint">Удерживай иконку, чтобы изменить порядок</p>
@@ -433,10 +442,13 @@
   const themeLabel = document.getElementById('theme-label');
   const refreshBtn = document.getElementById('refresh-btn');
   const doneBtn    = document.getElementById('done-btn');
-  const apps       = document.getElementById('apps');
+  const grids      = [...document.querySelectorAll('.apps')];
   const hint       = document.getElementById('hint');
 
-  const ORDER_KEY = 'myapps-order-v1';
+  const ORDER_KEYS = {
+    apps: 'myapps-order-v1',
+    games: 'myapps-games-order-v1',
+  };
   const THEME_KEY = 'myapps-theme-v1';
 
   let editMode      = false;
@@ -467,32 +479,34 @@
   refreshBtn.addEventListener('click', () => window.location.reload());
 
   /* ---------- порядок ---------- */
-  function saveOrder() {
+  function saveOrder(grid) {
     try {
       localStorage.setItem(
-        ORDER_KEY,
-        JSON.stringify([...apps.children].map(el => el.dataset.id))
+        ORDER_KEYS[grid.id],
+        JSON.stringify([...grid.children].map(el => el.dataset.id))
       );
     } catch (_) {}
   }
 
-  function restoreOrder() {
+  function restoreOrder(grid) {
     try {
-      const order = JSON.parse(localStorage.getItem(ORDER_KEY) || '[]');
+      const savedOrder = localStorage.getItem(ORDER_KEYS[grid.id]) ||
+        (grid.id === 'games' ? localStorage.getItem(ORDER_KEYS.apps) : null);
+      const order = JSON.parse(savedOrder || '[]');
       if (!Array.isArray(order)) return;
       order.forEach(id => {
-        const item = [...apps.children].find(el => el.dataset.id === id);
-        if (item) apps.appendChild(item);
+        const item = [...grid.children].find(el => el.dataset.id === id);
+        if (item) grid.appendChild(item);
       });
     } catch (_) {}
   }
-  restoreOrder();
+  grids.forEach(restoreOrder);
 
   /* ---------- режим редактирования ---------- */
   function setEditMode(value) {
     if (editMode === value) return;
     editMode = value;
-    apps.classList.toggle('editing', value);
+    grids.forEach(grid => grid.classList.toggle('editing', value));
     document.body.classList.toggle('editing', value);
     hint.textContent = value
       ? 'Перетаскивай иконки · нажми «Готово», чтобы выйти'
@@ -540,7 +554,8 @@
   function maybeReorder(x, y) {
     if (!drag) return;
 
-    const siblings = [...apps.children].filter(c => c !== drag.el);
+    const grid = drag.el.parentElement;
+    const siblings = [...grid.children].filter(c => c !== drag.el);
     if (!siblings.length) return;
 
     // ближайший сосед к пальцу
@@ -564,8 +579,8 @@
     const fromPositions = new Map();
     for (const el of siblings) fromPositions.set(el, el.getBoundingClientRect());
 
-    if (before) apps.insertBefore(drag.el, best.el);
-    else        apps.insertBefore(drag.el, best.el.nextSibling);
+    if (before) grid.insertBefore(drag.el, best.el);
+    else        grid.insertBefore(drag.el, best.el.nextSibling);
 
     // позиция не изменилась — выходим
     if (drag.el.nextSibling === prevNext) return;
@@ -605,7 +620,7 @@
       el.style.transform  = '';
     }, 340);
     drag = null;
-    saveOrder();
+    saveOrder(el.parentElement);
   }
 
   /* ---------- pointer-события ----------
@@ -660,34 +675,36 @@
     }
   }
 
-  apps.addEventListener('pointerdown', onPointerDown);
+  grids.forEach(grid => grid.addEventListener('pointerdown', onPointerDown));
   document.addEventListener('pointermove', onPointerMove, { passive: true });
   document.addEventListener('pointerup', onPointerUp);
   document.addEventListener('pointercancel', onPointerUp);
 
   /* ---------- клики ---------- */
-  apps.addEventListener('click', event => {
-    const item = event.target.closest('.app');
-    if (!item) return;
+  grids.forEach(grid => {
+    grid.addEventListener('click', event => {
+      const item = event.target.closest('.app');
+      if (!item) return;
 
-    if (suppressClick) {
-      suppressClick = false;
-      event.preventDefault();
-      return;
-    }
-    if (editMode) {
-      event.preventDefault();
-      return;
-    }
-    const url = item.dataset.url;
-    if (!url) return;
+      if (suppressClick) {
+        suppressClick = false;
+        event.preventDefault();
+        return;
+      }
+      if (editMode) {
+        event.preventDefault();
+        return;
+      }
+      const url = item.dataset.url;
+      if (!url) return;
 
-    item.classList.add('opening');
-    setTimeout(() => item.classList.remove('opening'), 220);
-    window.open(url, '_blank', 'noopener,noreferrer');
+      item.classList.add('opening');
+      setTimeout(() => item.classList.remove('opening'), 220);
+      window.open(url, '_blank', 'noopener,noreferrer');
+    });
+
+    grid.addEventListener('contextmenu', e => e.preventDefault());
   });
-
-  apps.addEventListener('contextmenu', e => e.preventDefault());
 
   document.addEventListener('click', event => {
     if (editMode &&
