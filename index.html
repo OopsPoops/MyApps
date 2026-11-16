@@ -46,7 +46,10 @@
   }
 
   * { box-sizing: border-box; }
-  html, body { min-height: 100%; }
+  html, body {
+    min-height: 100%;
+    background: linear-gradient(160deg, var(--wall-1), var(--wall-2) 48%, var(--wall-3));
+  }
   body {
     margin: 0;
     min-height: 100dvh;
@@ -60,10 +63,12 @@
   /* ---------- обои ---------- */
   .wallpaper {
     position: fixed;
-    inset: 0;
-    z-index: -2;
+    inset: -100vh 0;
+    z-index: 0;
+    pointer-events: none;
     background: linear-gradient(160deg, var(--wall-1), var(--wall-2) 48%, var(--wall-3));
     transition: background .4s ease;
+    will-change: transform;
   }
   .wallpaper::after {
     content: "";
@@ -83,6 +88,7 @@
 
   .page {
     position: relative;
+    z-index: 1;
     width: min(100% - 40px, 760px);
     margin: 0 auto;
     padding: max(28px, env(safe-area-inset-top)) 0 max(40px, env(safe-area-inset-bottom));
