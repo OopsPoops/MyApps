@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#dfe7f7">
+<meta name="description" content="MyApps — панель моих приложений и игр: быстрый доступ к проектам, тёмная тема, свой порядок иконок.">
+<meta property="og:title" content="MyApps">
+<meta property="og:description" content="Панель приложений и игр с тёмной темой и настраиваемым порядком иконок.">
+<meta property="og:type" content="website">
 <link rel="icon" type="image/png" href="assets/icons/myapps.png">
 <link rel="apple-touch-icon" href="assets/icons/myapps.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -27,6 +31,7 @@
     --icon-shadow: 0 10px 22px rgba(20,20,50,.2), 0 2px 5px rgba(0,0,0,.1);
     --label-shadow: 0 1px 3px rgba(0,0,0,.35);
     --accent: #0a84ff;
+    --focus-ring: #0a84ff;
   }
   :root[data-theme="dark"] {
     color-scheme: dark;
@@ -193,7 +198,7 @@
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
-    touch-action: none;
+    touch-action: manipulation;
     z-index: 1;
   }
 
@@ -240,6 +245,17 @@
 
   .app:hover .app-icon { transform: translateY(-2px) scale(1.02); }
   .app:active .app-icon { transform: scale(.93); }
+
+  .app:focus-visible .app-icon {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 3px;
+  }
+  .icon-btn:focus-visible,
+  .switch:focus-visible,
+  .done-btn:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
 
   .app.opening .app-icon {
     transform: scale(.84);
@@ -413,6 +429,12 @@
 
 </main>
 
+<noscript>
+  <p style="text-align:center;color:var(--muted);font-size:14px;">
+    Для работы MyApps нужен включённый JavaScript.
+  </p>
+</noscript>
+
 <script>
 (() => {
   const root       = document.documentElement;
@@ -475,6 +497,10 @@
         const item = [...grid.children].find(el => el.dataset.id === id);
         if (item) grid.appendChild(item);
       });
+      // иконки, которых нет в сохранённом порядке (новые в HTML), — в конец
+      [...grid.children]
+        .filter(el => !order.includes(el.dataset.id))
+        .forEach(el => grid.appendChild(el));
     } catch (_) {}
   }
   grids.forEach(restoreOrder);
@@ -653,6 +679,12 @@
   document.addEventListener('pointermove', onPointerMove, { passive: true });
   document.addEventListener('pointerup', onPointerUp);
   document.addEventListener('pointercancel', onPointerUp);
+
+  // Пока идёт перетаскивание — запрещаем скролл страницы пальцем.
+  // До начала drag скролл работает нормально (touch-action: manipulation).
+  document.addEventListener('touchmove', event => {
+    if (drag) event.preventDefault();
+  }, { passive: false });
 
   /* ---------- клики ---------- */
   grids.forEach(grid => {
