@@ -224,6 +224,10 @@
   }
   .app-image.sema-image { object-position: center 38%; }
   .app-image.exchange-image { object-position: center 40%; }
+  .app-image.contain-image {
+    object-fit: contain;
+    background: var(--glass);
+  }
   /* глянцевый блик сверху — как у иконок iOS */
   .app-icon::after {
     content: "";
@@ -368,62 +372,52 @@
   <h2 class="games-title">Игры</h2>
   <section class="apps" id="games" aria-label="Игры">
     <button class="app" type="button" data-id="game-2048" data-url="https://oopspoops.github.io/RunTimer/game_2048.html">
-      <span class="app-icon" style="background:linear-gradient(145deg,#f6a94b,#dc6b32)">
-        <svg viewBox="0 0 100 100" width="70%" height="70%" fill="none">
-          <rect x="14" y="14" width="72" height="72" rx="14" fill="#fff" opacity=".2"/>
-          <rect x="22" y="22" width="25" height="25" rx="6" fill="#fff" opacity=".55"/>
-          <rect x="53" y="22" width="25" height="25" rx="6" fill="#fff" opacity=".75"/>
-          <rect x="22" y="53" width="25" height="25" rx="6" fill="#fff" opacity=".75"/>
-          <text x="65.5" y="71" fill="#fff" font-size="17" font-weight="700" text-anchor="middle">4</text>
-        </svg>
+      <span class="app-icon">
+        <img class="app-image" src="assets/game-2048.png" alt="" aria-hidden="true">
       </span>
       <span class="app-name">2048</span>
     </button>
 
     <button class="app" type="button" data-id="game-1024-bubble" data-url="https://oopspoops.github.io/RunTimer/game_1024_Bubble_v2.html">
-      <span class="app-icon" style="background:linear-gradient(145deg,#51c9e8,#4266d5)">
-        <svg viewBox="0 0 100 100" width="70%" height="70%" fill="none">
-          <circle cx="34" cy="37" r="20" fill="#fff" opacity=".8"/>
-          <circle cx="66" cy="37" r="20" fill="#fff" opacity=".5"/>
-          <circle cx="50" cy="65" r="24" fill="#fff" opacity=".7"/>
-          <text x="50" y="70" fill="#4266d5" font-size="17" font-weight="700" text-anchor="middle">1024</text>
-        </svg>
+      <span class="app-icon">
+        <img class="app-image" src="assets/game-1024.jpeg" alt="" aria-hidden="true">
       </span>
       <span class="app-name">1024 Bubble</span>
     </button>
 
     <button class="app" type="button" data-id="game-memory" data-url="https://oopspoops.github.io/RunTimer/game_memory.html">
-      <span class="app-icon" style="background:linear-gradient(145deg,#ae79ef,#7046c8)">
-        <svg viewBox="0 0 100 100" width="70%" height="70%" fill="none">
-          <rect x="18" y="24" width="42" height="54" rx="9" stroke="#fff" stroke-width="5" opacity=".65"/>
-          <rect x="40" y="18" width="42" height="54" rx="9" fill="#fff" opacity=".22"/>
-          <rect x="40" y="18" width="42" height="54" rx="9" stroke="#fff" stroke-width="5"/>
-          <path d="M54 37a7 7 0 1 1 13 4c-4 4-6 5-6 10m0 8v1" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
-        </svg>
+      <span class="app-icon">
+        <img class="app-image" src="assets/game-memory.png" alt="" aria-hidden="true">
       </span>
       <span class="app-name">Найди пару</span>
     </button>
 
     <button class="app" type="button" data-id="game-runner" data-url="https://oopspoops.github.io/RunTimer/game_runner.html">
-      <span class="app-icon" style="background:linear-gradient(145deg,#47d39b,#138d71)">
-        <svg viewBox="0 -82 88 90" width="70%" height="70%" fill="#fff">
-          <path d="M50.3906-61.1816C55.127-61.1816 58.8867-64.9902 58.8867-69.6777C58.8867-74.4141 55.127-78.1738 50.3906-78.1738C45.7031-78.1738 41.8945-74.4141 41.8945-69.6777C41.8945-64.9902 45.7031-61.1816 50.3906-61.1816ZM37.1094-27.3926L51.9043-19.043L42.334-10.8887C40.2344-9.0332 40.3809-6.73828 41.6016-5.37109C42.8711-3.95508 45.166-3.51562 47.3633-5.41992L60.7422-16.8457C62.5977-18.3594 62.3047-21.7773 60.0586-23.2422L45.5566-32.7637L48.3887-42.7734C48.7793-44.1895 50.4395-44.3848 51.2695-43.1641L55.5176-36.9141C56.543-35.4492 58.3984-34.8633 60.0586-35.6445L72.3633-41.1133C74.6094-42.0898 75.4395-44.043 74.4629-46.0449C73.4863-47.998 71.582-48.584 69.4336-47.6074L59.668-43.3105L52.9785-52.5879C49.4629-57.373 45.166-59.375 37.9883-58.8379L24.3164-57.8613C22.1191-57.7148 20.6543-56.25 20.3613-54.0527L18.5059-40.1855C18.1641-37.793 19.3848-36.084 21.5332-35.8398C23.7305-35.6445 25.1465-36.9141 25.4883-39.3066L27.1484-50.5859L32.5684-50.9766C33.7402-51.0742 34.9121-50.293 34.4727-48.7793L31.3477-37.6465C29.4434-31.0547 33.7402-29.2969 37.1094-27.3926ZM11.084 6.15234C12.5488 7.37305 14.7461 7.61719 16.7969 5.61523L29.3457-6.83594C30.4199-7.91016 30.6641-8.1543 31.2988-9.76562L36.5234-23.291L35.2051-24.0234C32.3242-25.6348 30.2246-27.1973 28.8086-28.9551L24.2188-12.793L11.1816 0.195312C9.08203 2.24609 9.57031 4.78516 11.084 6.15234Z"/>
-        </svg>
+      <span class="app-icon">
+        <img class="app-image" src="assets/game-runner.jpg" alt="" aria-hidden="true">
       </span>
       <span class="app-name">Раннер</span>
     </button>
 
     <button class="app" type="button" data-id="game-match3" data-url="https://oopspoops.github.io/RunTimer/game_match3.html">
-      <span class="app-icon" style="background:linear-gradient(145deg,#ff7c9c,#e44370)">
-        <svg viewBox="0 0 100 100" width="70%" height="70%" fill="none">
-          <circle cx="31" cy="31" r="13" fill="#fff" opacity=".9"/>
-          <circle cx="67" cy="31" r="13" fill="#fff" opacity=".55"/>
-          <circle cx="31" cy="67" r="13" fill="#fff" opacity=".55"/>
-          <circle cx="67" cy="67" r="13" fill="#fff" opacity=".9"/>
-          <path d="m49 48 5-9 5 9 10 2-7 7 1 10-9-5-9 5 1-10-7-7 10-2Z" fill="#fff"/>
-        </svg>
+      <span class="app-icon">
+        <img class="app-image" src="assets/game-match3.png" alt="" aria-hidden="true">
       </span>
       <span class="app-name">Три в ряд</span>
+    </button>
+
+    <button class="app" type="button" data-id="game-sega" data-url="https://t.me/SegaGamesBot/SegaRetro">
+      <span class="app-icon">
+        <img class="app-image" src="assets/game-sega.png" alt="" aria-hidden="true">
+      </span>
+      <span class="app-name">SEGA</span>
+    </button>
+
+    <button class="app" type="button" data-id="game-dendy" data-url="https://t.me/DendyRetroBot/DendyRetro">
+      <span class="app-icon">
+        <img class="app-image contain-image" src="assets/game-dendy.gif" alt="" aria-hidden="true">
+      </span>
+      <span class="app-name">Dendy</span>
     </button>
   </section>
 
