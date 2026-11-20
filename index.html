@@ -40,13 +40,13 @@
     color-scheme: dark;
     --text: #f5f5f7;
     --muted: #b0b0bb;
-    --wall-1: #0a0e2a;
-    --wall-2: #181238;
-    --wall-3: #04060f;
-    --nebula-1: rgba(110, 80, 255, .20);
-    --nebula-2: rgba(40, 110, 255, .16);
+    --wall-1: #070a1c;
+    --wall-2: #0b1026;
+    --wall-3: #04050d;
+    --nebula-1: rgba(88, 28, 135, .42);
+    --nebula-2: rgba(14, 116, 144, .32);
     --star-opacity: 1;
-    --glass: rgba(28,28,34,.55);
+    --glass: rgba(22, 24, 48, .55);
     --glass-border: rgba(255,255,255,.1);
     --glass-shadow: 0 10px 30px rgba(0,0,0,.55);
     --switch-bg: rgba(120,120,128,.45);
@@ -68,8 +68,8 @@
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
     -webkit-font-smoothing: antialiased;
     background:
-      radial-gradient(720px 480px at 12% 6%, var(--nebula-1), transparent 62%) fixed,
-      radial-gradient(820px 560px at 90% 88%, var(--nebula-2), transparent 62%) fixed,
+      radial-gradient(720px 480px at 20% 30%, var(--nebula-1), transparent 62%) fixed,
+      radial-gradient(820px 560px at 80% 70%, var(--nebula-2), transparent 62%) fixed,
       linear-gradient(160deg, var(--wall-1), var(--wall-2) 48%, var(--wall-3)) fixed;
     overflow-x: hidden;
   }
@@ -543,7 +543,7 @@
     themeBtn.setAttribute('aria-checked', String(dark));
     themeLabel.textContent = dark ? 'Тёмная' : 'Светлая';
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.content = dark ? '#080808' : '#dfe7f7';
+    if (meta) meta.content = dark ? '#050714' : '#dfe7f7';
     try { localStorage.setItem(THEME_KEY, theme); } catch (_) {}
   }
 
